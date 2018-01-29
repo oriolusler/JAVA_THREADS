@@ -1,19 +1,19 @@
 package Exercise_03_SCP_B;
 
 public class SCP_B {
-    
-    public static void main (String [] args) {
+
+    public static void main(String[] args) {
         Storage storage = new Storage();
         SynchroMechanism synchro = new SynchroMechanism();
-        
+
         Counter counter = new Counter(storage, synchro);
         Printer printer = new Printer(storage, synchro);
-        
+
         try {
             Thread.sleep(5000);
+        } catch (InterruptedException ie) {
         }
-        catch(InterruptedException ie) {}
-        
+
         counter.stop();
         printer.stop();
     }
@@ -26,29 +26,37 @@ class SynchroMechanism {
 
 class Storage {
     private int value = -1000;
-    
-    public int getValue() {return this.value;}
-    public void setValue(int value) {this.value = value;}
+
+    public int getValue() {
+        return this.value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }
 
 class Counter extends Thread {
     private Storage storage;
     private SynchroMechanism synchro;
-    
-    public Counter (Storage storage, SynchroMechanism synchro) {
+
+    public Counter(Storage storage, SynchroMechanism synchro) {
         this.storage = storage;
         this.synchro = synchro;
         // once created, instances of Counter start themselves
         this.start();
     }
-    
-    public void run () {
+
+    public void run() {
         int i;
         while (true) {
-            for (i=0; i<=9; i++) {
-                while(!synchro.canStore) {
+            for (i = 0; i <= 9; i++) {
+                while (!synchro.canStore) {
                     /* COMPLETE */
                 }
+                storage.setValue(i);
+                synchro.canStore = false;
+                synchro.canPrint = true;
                 /* COMPLETE */
             }
         }
@@ -58,18 +66,25 @@ class Counter extends Thread {
 class Printer extends Thread {
     private Storage storage;
     private SynchroMechanism synchro;
-    
-    public Printer (Storage storage, SynchroMechanism synchro) {
+
+    public Printer(Storage storage, SynchroMechanism synchro) {
         this.storage = storage;
         this.synchro = synchro;
         // once created, instances of Printer start themselves
         this.start();
     }
-    
-    public void run () {
+
+    public void run() {
         int i;
         while (true) {
-            /* COMPLETE */
+            while (!synchro.canPrint) {
+            }
+            for (i = 0; i < storage.getValue(); i++) {
+                System.out.print(" ");
+            }
+            System.out.println(storage.getValue());
+            synchro.canStore = true;
+            synchro.canPrint = false;
         }
     }
 }
