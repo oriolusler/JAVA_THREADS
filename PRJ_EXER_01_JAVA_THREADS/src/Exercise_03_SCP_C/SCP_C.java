@@ -26,35 +26,32 @@ class Storage {
     private volatile boolean canBeGot = false;
 
     public int getValue() {
-        /* COMPLETE */
 
+        int safeCopy;
 
-        while (!canBeGot) {
-        }
+        while (!canBeGot) { /*busy waiting*/ }
 
         try {
             Thread.sleep(0, 10);
         } catch (InterruptedException ie) {
         }
+
+        safeCopy = value;
+
         canBeGot = false;
         canBeSet = true;
-        return value;
 
-
-        /*COMPLETE */
-
+        /*safe copy avoid race condition*/
+        return safeCopy;
     }
 
     public void setValue(int value) {
 
-        /*COMPLETE */
+        while (!canBeSet) { /*busy waiting*/}
 
-        while (!canBeSet) {
-        }
-
-        this.value = value;
         // once a value has been set it can be got but a new one can't be set
         // until the old one has been got
+        this.value = value;
         canBeSet = false;
         canBeGot = true;
     }

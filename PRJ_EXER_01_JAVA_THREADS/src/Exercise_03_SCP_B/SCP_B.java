@@ -30,7 +30,6 @@ class Storage {
     public int getValue() {
         return this.value;
     }
-
     public void setValue(int value) {
         this.value = value;
     }
@@ -52,7 +51,7 @@ class Counter extends Thread {
         while (true) {
             for (i = 0; i <= 9; i++) {
                 while (!synchro.canStore) {
-                    /* COMPLETE */
+                   /*busy waiting*/
                 }
                 storage.setValue(i);
                 synchro.canStore = false;

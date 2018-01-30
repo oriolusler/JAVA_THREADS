@@ -63,10 +63,11 @@ class Printer extends Thread {
 
     public void run() {
         while (true) {
-            for (int i = 0; i < storage.getValue(); i++) {
+           int valueAux =  storage.getValue();
+            for (int i = 0; i <valueAux; i++) {
                 System.out.print(" ");
             }
-            System.out.print(storage.getValue() + "\n");
+            System.out.print(valueAux+ "\n");
         }
     }
 }
